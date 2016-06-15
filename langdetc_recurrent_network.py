@@ -5,13 +5,13 @@ A Reccurent Neural Network (LSTM) implementation example using TensorFlow librar
 import AlphaBase
 import os
 import tensorflow as tf
-from tensorflow.models.rnn import rnn, rnn_cell
+#from tensorflow.models.rnn import rnn, rnn_cell
 import numpy as np
 import LanguageSource as LanguageSource
 import LangTestData as langTestData
 
 # Get training data
-lang_data_dir = '/Users/frank/data/LanguageDetectionModel/exp_data_test'
+lang_data_dir = '/home/frank/data/LanguageDetectionModel/exp_data_test'
 alpha_file_name = 'alpha_dog.pk'
 
 if os.path.isfile(alpha_file_name):
@@ -27,9 +27,9 @@ lang_data = LanguageSource.LanguageSource(alpha_set)
 lang_data.begin(lang_data_dir)
 
 # Parameters
-learning_rate = 0.0005
-training_cycles = 2000000
-batch_size = 1024
+learning_rate = 0.00001
+training_cycles = 100000000
+batch_size = 128
 display_step = 10
 
 # Network Parameters
@@ -41,7 +41,7 @@ n_classes = 21  # total number of class, (the number of languages in the databas
 
 # Get test data
 lang_db_test = langTestData.LangTestData()
-x_test, y_test = lang_db_test.read_data('/Users/frank/data/LanguageDetectionModel/europarl.test', n_steps)
+x_test, y_test = lang_db_test.read_data('/home/frank/data/LanguageDetectionModel/europarl.test', n_steps)
 test_data = lang_data.get_ml_data_matrix(n_input, x_test)  # get one-hot version of data
 y_test2 = [lang_data.language_name_to_index[y_l] for y_l in y_test]  # convert the language names to indexes
 test_label = lang_data.get_class_rep(y_test2, n_classes)  # convert the class indexes to one-hot vectors
@@ -78,13 +78,13 @@ def lm_rnn(_x, _i_state, _weights, _biases):
     xin = tf.split(0, n_steps, xin)  # n_steps * (batch_size, n_hidden)
 
     # Define a lstm cell with tensorflow
-    lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=0.95)
+    lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, forget_bias=0.95)
     # lstm_cell = rnn_cell.LSTMCell(n_hidden, use_peepholes=True, cell_clip=2, forget_bias=0.99)
 
     # Get lstm cell output
     # outputs - a list of n_step matrix of shape [? x n_hidden]
     # states - a list of n_step vectors of size [2*n_hidden]
-    outputs, states = rnn.rnn(lstm_cell, xin, initial_state=_i_state)
+    outputs, states = tf.nn.rnn(lstm_cell, xin, initial_state=_i_state)
 
     # Linear activation
     # Get inner loop last output
