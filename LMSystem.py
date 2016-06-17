@@ -69,6 +69,7 @@ class LMSystem(object):
         with tf.Session() as sess:
             sess.run(self.init)
             step = 1
+            model_count = 0
             # Keep training until reach max iterations
             while step * self.parms.batch_size < self.parms.training_cycles:
                 # batch_xs - list (of length batch_size) of strings each of length n_input,
@@ -105,7 +106,8 @@ class LMSystem(object):
 
                     # Save model periodically
                     if step % self.parms.model_step == 0:
-                        model_save_name = _model_file_name + '_' + str(step)
+                        model_count += 1
+                        model_save_name = _model_file_name + '_' + str(model_count)
                         saver.save(sess, model_save_name)
                         print('model saved:', model_save_name)
 
