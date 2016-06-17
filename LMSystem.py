@@ -115,7 +115,7 @@ class LMSystem(object):
                     # Save model periodically
                     if step % self.parms.model_step == 0:
                         model_count += 1
-                        model_save_name = _model_file_name + '_' + str(model_count)
+                        model_save_name = _model_file_name + '_' + str(model_count)  # build file name
                         saver.save(sess, model_save_name)
                         print('model saved:', model_save_name)
 
