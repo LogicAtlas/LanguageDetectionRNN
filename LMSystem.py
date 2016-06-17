@@ -1,3 +1,6 @@
+"""
+  A class for training and testing Recurrent Neural Network language identification models.
+"""
 import tensorflow as tf
 import numpy as np
 
@@ -64,12 +67,17 @@ class LMSystem(object):
         self.init = tf.initialize_all_variables()
 
     def train(self, lang_data, _model_file_name):
+        """ Train the model on a data set
+        :param lang_data: a LanguageSource object for the training data.
+        :param _model_file_name: the base name for the output model file.
+        :return: nothing
+        """
         saver = tf.train.Saver()
         # Launch the graph
         with tf.Session() as sess:
             sess.run(self.init)
             step = 1
-            model_count = 0
+            model_count = 0  # name models with this variable
             # Keep training until reach max iterations
             while step * self.parms.batch_size < self.parms.training_cycles:
                 # batch_xs - list (of length batch_size) of strings each of length n_input,
@@ -116,21 +124,27 @@ class LMSystem(object):
             saver.save(sess, _model_file_name + '_final')
 
     def test(self, _test_data, _test_label,  _model_file_name):
-            saver = tf.train.Saver()
-            test_len = len(_test_label)
-            # Calculate accuracy
-            with tf.Session() as sess:
-                saver.restore(sess, _model_file_name)
-                test_batch_size = 1000
-                acc_sum = 0
-                b_count = int(test_len/test_batch_size)
+        """ Test a model on a test data.
+        :param _test_data: a numpy array of test data
+        :param _test_label: class labels for the test data
+        :param _model_file_name: the name of the model file to test with.
+        :return: nothing.
+        """
+        saver = tf.train.Saver()
+        test_len = len(_test_label)
+        # Calculate accuracy
+        with tf.Session() as sess:
+            saver.restore(sess, _model_file_name)
+            test_batch_size = 1000
+            acc_sum = 0
+            b_count = int(test_len/test_batch_size)
 
-                for i in range(b_count):
-                    test_batch_x = _test_data[:, i*test_batch_size:(i+1)*test_batch_size, :]
-                    test_batch_y = _test_label[i*test_batch_size:(i+1)*test_batch_size]
+            for i in range(b_count):
+                test_batch_x = _test_data[:, i*test_batch_size:(i+1)*test_batch_size, :]
+                test_batch_y = _test_label[i*test_batch_size:(i+1)*test_batch_size]
 
-                    acc_sum += sess.run(self.accuracy,
-                                        feed_dict={self.x: test_batch_x, self.y: test_batch_y,
-                                                   self.i_state: np.zeros((test_batch_size, 2 * self.parms.n_hidden))})
-                acc_avg = acc_sum / b_count
-                print("Testing Accuracy:", acc_avg)
+                acc_sum += sess.run(self.accuracy,
+                                    feed_dict={self.x: test_batch_x, self.y: test_batch_y,
+                                               self.i_state: np.zeros((test_batch_size, 2 * self.parms.n_hidden))})
+            acc_avg = acc_sum / b_count
+            print("Testing Accuracy:", acc_avg)
