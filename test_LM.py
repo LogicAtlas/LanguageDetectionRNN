@@ -9,7 +9,7 @@ import LangTestData as langTestData
 import LMSystem as LMSystem
 
 # Set the location of training and testing files
-base_dir = '/Users/Frank'
+base_dir = '/Users/frank'
 lang_data_dir = base_dir + '/data/LanguageDetectionModel/exp_data_test'
 test_data_file_name = base_dir + '/data/LanguageDetectionModel/europarl.test'
 alpha_file_name = 'alpha_dog.pk'
@@ -35,6 +35,7 @@ class Parms:
     training_cycles = 16000
     batch_size = 64
     display_step = 10
+    model_step = 100
 
     # Network Parameters
     # number of characters in the set of languages, also the size of the one-hot vector encoding characters
@@ -47,12 +48,12 @@ parms = Parms()
 
 # Get test data
 lang_db_test = langTestData.LangTestData()
-x_test, y_test = lang_db_test.read_data(test_data_file_name, parms.n_steps)
+x_test, y_test = lang_db_test.read_data(test_data_file_name, parms.n_steps, alpha_set.filter)
 test_data = train_lang_data.get_ml_data_matrix(parms.n_input, x_test)  # get one-hot version of data
 y_test2 = [train_lang_data.language_name_to_index[y_l] for y_l in y_test]  # convert the language names to indexes
 test_label = train_lang_data.get_class_rep(y_test2, parms.n_classes)  # convert the class indexes to one-hot vectors
 
 my_lm = LMSystem.LMSystem(parms)
-model_file_name = 'model_1.tf'
-my_lm.train(train_lang_data, model_file_name)
-my_lm.test(test_data, test_label, model_file_name)
+model_base_file_name = 'models/model_t'
+my_lm.train(train_lang_data, model_base_file_name)
+my_lm.test(test_data, test_label, model_base_file_name + '_final')

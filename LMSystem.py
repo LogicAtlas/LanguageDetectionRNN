@@ -102,9 +102,16 @@ class LMSystem(object):
                           "{:.6f}".format(loss) +
                           ", Training Accuracy= " + "{:.5f}".format(acc) + ", Validation Loss=" +
                           "{:.6f}".format(loss_val) + ", Validation Accuracy= " + "{:.5f}".format(acc_val))
+
+                    # Save model periodically
+                    if step % self.parms.model_step == 0:
+                        model_save_name = _model_file_name + '_' + str(step)
+                        saver.save(sess, model_save_name)
+                        print('model saved:', model_save_name)
+
                 step += 1
             print("Optimization Finished!")
-            saver.save(sess, _model_file_name)
+            saver.save(sess, _model_file_name + '_final')
 
     def test(self, _test_data, _test_label,  _model_file_name):
             saver = tf.train.Saver()
@@ -112,7 +119,16 @@ class LMSystem(object):
             # Calculate accuracy
             with tf.Session() as sess:
                 saver.restore(sess, _model_file_name)
-                print("Testing Accuracy:", sess.run(self.accuracy,
-                                                    feed_dict={self.x: _test_data, self.y: _test_label,
-                                                               self.i_state: np.zeros((test_len,
-                                                                                       2 * self.parms.n_hidden))}))
+                test_batch_size = 1000
+                acc_sum = 0
+                b_count = int(test_len/test_batch_size)
+
+                for i in range(b_count):
+                    test_batch_x = _test_data[:, i*test_batch_size:(i+1)*test_batch_size, :]
+                    test_batch_y = _test_label[i*test_batch_size:(i+1)*test_batch_size]
+
+                    acc_sum += sess.run(self.accuracy,
+                                        feed_dict={self.x: test_batch_x, self.y: test_batch_y,
+                                                   self.i_state: np.zeros((test_batch_size, 2 * self.parms.n_hidden))})
+                acc_avg = acc_sum / b_count
+                print("Testing Accuracy:", acc_avg)
