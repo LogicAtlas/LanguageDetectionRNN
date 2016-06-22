@@ -7,11 +7,12 @@ import numpy as np
 
 class LMSystem(object):
 
-    def __init__(self, _parms):
+    def __init__(self, _n_input, _parms):
+        self.n_input = _n_input
         self.parms = _parms
         # tf Graph
         # input
-        self.x = tf.placeholder("float", [_parms.n_steps, None, _parms.n_input])
+        self.x = tf.placeholder("float", [_parms.n_steps, None, self.n_input])
         # desired output
         self.y = tf.placeholder("float", [None, _parms.n_classes])
         # Tensorflow LSTM cell requires 2x n_hidden length (state & cell)
@@ -19,7 +20,7 @@ class LMSystem(object):
 
         # Define weights
         self.weights = {
-            'hidden': tf.Variable(tf.random_normal([_parms.n_input, _parms.n_hidden])),  # Hidden layer weights
+            'hidden': tf.Variable(tf.random_normal([self.n_input, _parms.n_hidden])),  # Hidden layer weights
             'out': tf.Variable(tf.random_normal([_parms.n_hidden, _parms.n_classes]))
         }
         self.biases = {
@@ -30,7 +31,7 @@ class LMSystem(object):
         # Define the RNN for the language model
         def lm_rnn(_x, _i_state, _weights, _biases, s_parms):
             # Reformat _x from [ ] to [n_steps*batch_size x n_input]
-            xin = tf.reshape(_x, [-1, _parms.n_input])
+            xin = tf.reshape(_x, [-1, self.n_input])
 
             # Linear activation
             xin = tf.matmul(xin, _weights['hidden']) + _biases['hidden']
