@@ -4,7 +4,12 @@ import numpy as np
 
 
 class LanguageSource(object):
+    """ A class for training data.
+    """
     def __init__(self, alpha_set: AlphaBase):
+        """ Constructor, must be constructed after alpha_set is computed.
+        :param alpha_set: information about the characters used in the languages.
+        """
         self.language_file_id = {}
         self.language_name_to_index = {}
         self.language_index_to_name = {}
@@ -14,6 +19,10 @@ class LanguageSource(object):
         pass
 
     def begin(self, data_dir):
+        """ Create data structures for reading data
+        :param data_dir: the base directory of the data, one file per language
+        :return:
+        """
         for ix, file in enumerate(os.listdir(data_dir)):
             lang_name = file.split('-')[1].split('.')[0]  # get the language's name (string representation)
             full_file_name = data_dir + '/' + file
@@ -24,6 +33,11 @@ class LanguageSource(object):
 
     @staticmethod
     def read_with_restart(fh, read_len):
+        """ read a string from the data file. If it is at the end of the file then seek back to the beginning.
+        :param fh:
+        :param read_len:
+        :return: a string from the data.
+        """
         ft1 = fh.tell()
         r_data = fh.read(read_len)
         ft2 = fh.tell()
@@ -34,6 +48,11 @@ class LanguageSource(object):
         return r_data
 
     def get_next_batch(self, batch_size: int, seq_len) -> ([str], [str]):
+        """ Retrun a list of strings from the data set.
+        :param batch_size: the number of strings to return.
+        :param seq_len: the length of each string.
+        :return: a list of strings. Each string is from a language found sequentially.
+        """
         lang_str_list = []
         lang_id_list = []
         for bi in range(batch_size):

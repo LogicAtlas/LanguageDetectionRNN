@@ -6,8 +6,13 @@ import numpy as np
 
 
 class LMSystem(object):
-
+    """ A class for language modelling.
+    """
     def __init__(self, _n_input, _parms):
+        """ Constructor
+        :param _n_input: the number of symbols in all languages
+        :param _parms: the parameters for training.
+        """
         self.n_input = _n_input
         self.parms = _parms
         # tf Graph
@@ -30,6 +35,14 @@ class LMSystem(object):
 
         # Define the RNN for the language model
         def lm_rnn(_x, _i_state, _weights, _biases, s_parms):
+            """ language model rnn
+            :param _x: rnn input
+            :param _i_state: rnn state
+            :param _weights: rnn weights
+            :param _biases: rnn biases
+            :param s_parms: training parameters
+            :return:
+            """
             # Reformat _x from [ ] to [n_steps*batch_size x n_input]
             xin = tf.reshape(_x, [-1, self.n_input])
 

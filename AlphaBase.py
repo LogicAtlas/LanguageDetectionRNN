@@ -4,6 +4,8 @@ import re
 
 
 class AlphaBase(object):
+    """ A class for representing the characters (Alpha) of a language (or a set of languages).
+    """
     def __init__(self):
         self.alpha_count = {}
         self.alpha_count_total = 0
@@ -11,9 +13,14 @@ class AlphaBase(object):
         self.alpha_index = {}
         self.alpha_compressed_size_value = 0
         self.num_languages_value = 0
-        pass
+        self.alpha_compressed_size_value = 0  # the number of characters in the language after compression
 
     def start(self, data_dir, char_limit_per_language=0):
+        """ Begin processing the data in 'data_dir'
+        :param data_dir: the location of all the language data files, one per language
+        :param char_limit_per_language: limit the number of characters processed per file, 0 => no limit
+        :return:
+        """
         for file in os.listdir(data_dir):
             full_file = os.path.join(data_dir, file)
             char_count = 0
@@ -34,6 +41,10 @@ class AlphaBase(object):
         self.num_languages_value = len(os.listdir(data_dir))
 
     def compress(self, compression_factor):
+        """ Compress the alphabet used in the languages by the compression factor. 1.0 => no compression, 0.5 => 50%
+        :param compression_factor:
+        :return:
+        """
         alpha_list = [(k, v) for k, v in self.alpha_prob.items()]
         alpha_sorted = sorted(alpha_list, key=lambda x: x[1], reverse=True)
         acc_prob = 0
@@ -101,5 +112,3 @@ class AlphaBase(object):
         b = AlphaBase.load_object_from_file('dog.pk')
         print(b.alpha_size, b.alpha_compressed_size)
         print(b.get_alpha_string_index_list('This is a test'))
-
-#AlphaBase.self_test()
