@@ -30,7 +30,7 @@ print('alpha size:', alpha_set.alpha_size, 'alpha compressed size', alpha_set.al
 train_lang_data = LanguageSource.LanguageSource(alpha_set)
 train_lang_data.begin(lang_data_dir)
 
-# Parameters for training are set here
+# Parameters for training are set here select for (very-small,small,medium,large,very-large)
 parms = ParmSet.ParmSet('small')
 parms.print()
 
