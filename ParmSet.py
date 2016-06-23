@@ -15,7 +15,7 @@ class ParmSet:
     def __init__(self, set_size):
         if set_size == 'very-small':
             self.learning_rate = 0.0005
-            self.training_cycles = 1000
+            self.training_cycles = 2000
             self.batch_size = 32
             self.display_step = 10
             self.model_step = 100

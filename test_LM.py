@@ -31,7 +31,7 @@ train_lang_data = LanguageSource.LanguageSource(alpha_set)
 train_lang_data.begin(lang_data_dir)
 
 # Parameters for training are set here select for (very-small,small,medium,large,very-large)
-parms = ParmSet.ParmSet('small')
+parms = ParmSet.ParmSet('medium')
 parms.print()
 
 # Get test data
