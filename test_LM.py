@@ -10,7 +10,7 @@ import LMSystem as LMSystem
 import ParmSet as ParmSet
 
 # Set the location of training and testing files
-base_dir = '/Users/frank'
+base_dir = '/home/frank'
 lang_data_dir = base_dir + '/data/LanguageDetectionModel/exp_data_test'
 test_data_file_name = base_dir + '/data/LanguageDetectionModel/europarl.test'
 alpha_file_name = 'alpha_dog.pk'
@@ -31,7 +31,7 @@ train_lang_data = LanguageSource.LanguageSource(alpha_set)
 train_lang_data.begin(lang_data_dir)
 
 # Parameters for training are set here select for (very-small,small,medium,large,very-large)
-parms = ParmSet.ParmSet('medium')
+parms = ParmSet.ParmSet('mega-large')
 parms.print()
 
 # Get test data
