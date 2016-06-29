@@ -7,9 +7,10 @@ import os
 import LanguageSource as LanguageSource
 import LangTestData as langTestData
 import LMSystem as LMSystem
+import ParmSet as ParmSet
 
 # Set the location of training and testing files
-base_dir = '/Users/frank'
+base_dir = '/home/frank'
 lang_data_dir = base_dir + '/data/LanguageDetectionModel/exp_data_test'
 test_data_file_name = base_dir + '/data/LanguageDetectionModel/europarl.test'
 alpha_file_name = 'alpha_dog.pk'
@@ -29,30 +30,18 @@ train_lang_data = LanguageSource.LanguageSource(alpha_set)
 train_lang_data.begin(lang_data_dir)
 
 
-# Parameters
-class Parms:
-    learning_rate = 0.0005
-    training_cycles = 16000
-    batch_size = 128
-    display_step = 10
-    model_step = 100
-
-    # Network Parameters
-    # number of characters in the set of languages, also the size of the one-hot vector encoding characters
-    n_input = 214
-    n_steps = 64  # time steps
-    n_hidden = 512  # hidden layer num of features
-    n_classes = 21  # total number of class, (the number of languages in the database)
-
-parms = Parms()
+parms = ParmSet.ParmSet('mega-large')
 
 # Get test data
 lang_db_test = langTestData.LangTestData()
 x_test, y_test = lang_db_test.read_data(test_data_file_name, parms.n_steps, alpha_set.filter)
-test_data = train_lang_data.get_ml_data_matrix(parms.n_input, x_test)  # get one-hot version of data
+test_data = train_lang_data.get_ml_data_matrix(alpha_set.alpha_compressed_size, x_test)  # get one-hot version of data
 y_test2 = [train_lang_data.language_name_to_index[y_l] for y_l in y_test]  # convert the language names to indexes
 test_label = train_lang_data.get_class_rep(y_test2, parms.n_classes)  # convert the class indexes to one-hot vectors
 
-my_lm = LMSystem.LMSystem(parms)
+my_lm = LMSystem.LMSystem(alpha_set.alpha_compressed_size, parms)
 
-my_lm.test(test_data, test_label, '/Volumes/CORSAIR/language_models/model_t_36')
+for i in range(1,7+1):
+  model_file_name = base_dir+ '/developer/LanguageDetectionRNN/models_mega_large/model_t_' + str(i)
+  print(model_file_name)
+  my_lm.test(test_data, test_label, model_file_name)
