@@ -24,9 +24,9 @@ python test_LM.py
 ### Results
 Model | CPU training time | GPU training time | Accuracy
 ------|-------------------|-------------------|-----------
-very-small | 20 secs | ? | 0.0841904765749
-small | 45 secs | ? | 0.27419047337
-medium | 11 mins 10 secs | ? | 0.937761902809
+very-small | 20 secs | 10 secs | 0.0841904765749
+small | 45 secs | 16 secs | 0.27419047337
+medium | 11 mins 10 secs | 2 mins 35 secs | 0.937761902809
 large | ? | 27 mins | 0.93928
 very-large | ? | 24 hours | 0.99761912
 
