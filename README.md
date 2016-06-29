@@ -8,7 +8,8 @@ This project uses Recurrent Neural Networks constructed from the TensorFlow tool
 * test_LM.py - A class for running a training and testing session on actual data.
 
 ### Data
-Data is taken from ???
+Data is taken from European Parliament Proceedings Parallel Corpus 1996-2011
+
 * training data should be in the one file per language format as created in the LanguageDetectionModel project
 * testing file should be 
 
@@ -26,8 +27,8 @@ Model | CPU training time | GPU training time | Accuracy
 very-small | 20 secs | ? | 0.0841904765749
 small | 45 secs | ? | 0.27419047337
 medium | 11 mins 10 secs | ? | 0.937761902809
-large | ? | ? | 0.99
-very-large | ? | ? | 0.99
+large | ? | 27 mins | 0.93928
+very-large | ? | 24 hours | 0.99761912
 
 CPU - MacBook Pro (Late 2013, 2.3 GHz Intel Core i7)
 
