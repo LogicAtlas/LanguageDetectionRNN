@@ -55,12 +55,22 @@ class ParmSet:
             # time on cpu: ? min, time on GPU: ? min, accuracy: ?
             self.learning_rate = 0.00001
             self.training_cycles = 50 * 1000 * 1000
-            self.batch_size = 64
+            self.batch_size = 128
             self.display_step = 10
-            self.model_step = 100
+            self.model_step = 10000
             self.n_steps = 64
-            self.n_hidden = 512
+            self.n_hidden = 1024
             self.n_classes = 21
+        elif set_size == 'mega-large':
+            # time on cpu: ? min, time on GPU: ? min, accuracy: ?
+            self.learning_rate = 0.00001
+            self.training_cycles = 50 * 1000 * 1000
+            self.batch_size = 128
+            self.display_step = 10
+            self.model_step = 50000
+            self.n_steps = 64
+            self.n_hidden = 2048
+            self.n_classes = 21          
         else:
             print('error in ParmSet parameters size')
 
